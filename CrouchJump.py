@@ -42,20 +42,27 @@ def on_space_press(event):
             keyboard.release('space')
 
 def toggle_pause():
-    global paused
-    hwnd = ctypes.windll.user32.GetForegroundWindow()
-    window_title = win32gui.GetWindowText(hwnd)
-    if window_title.endswith('.exe') or 'Counter-Strike' in window_title or 'Momentum' in window_title:
-        if paused:
-            if keyboard.is_pressed('space'):
-                keyboard.release('space')
-            if keyboard.is_pressed('left ctrl'):
-                keyboard.release('left ctrl')
-            paused = False
-            print(Fore.YELLOW + Style.BRIGHT + 'Script unpaused.' + Style.RESET_ALL)
-        else:
-            paused = True
-            print(Fore.YELLOW + Style.BRIGHT + 'Script paused.' + Style.RESET_ALL)
+    global paused, pause_hotkey
+    if pause_hotkey == "enter":
+        hwnd = ctypes.windll.user32.GetForegroundWindow()
+        window_title = win32gui.GetWindowText(hwnd)
+        if window_title.endswith('.exe'):
+            if paused:
+                if keyboard.is_pressed('space'):
+                    keyboard.release('space')
+                if keyboard.is_pressed('left ctrl'):
+                    keyboard.release('left ctrl')
+                paused = False
+                print(Fore.YELLOW + Style.BRIGHT + 'Script unpaused.' + Style.RESET_ALL)
+            else:
+                paused = True
+                print(Fore.YELLOW + Style.BRIGHT + 'Script paused.' + Style.RESET_ALL)
+    else:
+        hwnd = ctypes.windll.user32.GetForegroundWindow()
+        window_title = win32gui.GetWindowText(hwnd)
+        if window_title.endswith('.exe') or 'Counter-Strike' in window_title or 'Momentum' in window_title:
+            paused = not paused
+            print(Fore.YELLOW + Style.BRIGHT + 'Script ' + ('paused.' if paused else 'unpaused.') + Style.RESET_ALL)
 
 # Load configuration from file
 config = configparser.ConfigParser(comment_prefixes=';', allow_no_value=True)
@@ -79,7 +86,6 @@ else:
 # Display warning message box
 message = "Don't forget to pause/close the script when you aren't playing or else typing is going to be buggy.\n\nMake sure your crouch jump key is bound to +jump only!\n\nYou can now set a custom hotkey in config.ini that will let you pause the script while in-game. I recommend a function key (f1, f2, f3 etc.) or something you don't use while typing."
 messagebox.showwarning("crouchjump.exe", message)
-
 
 print(Fore.RED + "Crouch Jump activated. " + Fore.WHITE + Style.BRIGHT + "The script will automatically let go of crouch for you after a specified delay." + Style.RESET_ALL)
 print(Fore.WHITE + Style.BRIGHT + "You can change the uncrouch timing in the " + Fore.BLUE + Style.BRIGHT + "config.ini " + Fore.WHITE + Style.BRIGHT + "file. The default value is " + Fore.BLUE + Style.BRIGHT + "0.85" + Style.RESET_ALL + Fore.WHITE + Style.BRIGHT + " seconds." + Style.RESET_ALL)
