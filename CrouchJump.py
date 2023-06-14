@@ -7,6 +7,8 @@ import colorama
 from colorama import Fore, Style
 import ctypes
 import win32gui
+import tkinter as tk
+from tkinter import messagebox
 
 colorama.init()
 
@@ -28,6 +30,8 @@ def on_space_press(event):
 
     if event.event_type == keyboard.KEY_DOWN:
         if event.name == 'space':
+            if keyboard.is_pressed('w'):
+                keyboard.release('w')
             keyboard.press('space')
             keyboard.press('left ctrl')
             ctrl_pressed = True
@@ -59,6 +63,10 @@ else:
 
     with open(config_file, 'w') as configfile:
         config.write(configfile)
+
+# Display warning message box
+message = "Don't forget to pause/close the script when you aren't playing or else typing is going to be buggy.\n\nMake sure your crouch jump key is bound to +jump only!"
+messagebox.showwarning("Crouch Jump Script", message)
 
 print(Fore.RED + "Crouch Jump activated. " + Fore.WHITE + Style.BRIGHT + "The script will automatically let go of crouch for you after a specified delay." + Style.RESET_ALL)
 print(Fore.WHITE + Style.BRIGHT + "You can change the uncrouch timing in the " + Fore.BLUE + Style.BRIGHT + "config.ini " + Fore.WHITE + Style.BRIGHT + "file. The default value is " + Fore.BLUE + Style.BRIGHT + "0.85" + Style.RESET_ALL + Fore.WHITE + Style.BRIGHT + " seconds." + Style.RESET_ALL)
