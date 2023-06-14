@@ -67,6 +67,7 @@ def toggle_pause():
 # Load configuration from file
 config = configparser.ConfigParser(comment_prefixes=';', allow_no_value=True)
 config_file = 'config.ini'
+first_launch = False
 
 if os.path.exists(config_file):
     config.read(config_file)
@@ -75,17 +76,25 @@ if os.path.exists(config_file):
             release_delay = float(config['Settings']['release_delay'])
         if 'pause_hotkey' in config['Settings']:
             pause_hotkey = config['Settings']['pause_hotkey']
+        if 'first_launch' in config['Settings']:
+            first_launch = config.getboolean('Settings', 'first_launch')
 else:
     config.add_section('Settings')
     config.set('Settings', 'release_delay', str(release_delay))
     config.set('Settings', 'pause_hotkey', pause_hotkey)
+    config.set('Settings', 'first_launch', 'True')
 
     with open(config_file, 'w') as configfile:
         config.write(configfile)
+    first_launch = True
 
-# Display warning message box
-message = "Don't forget to pause/close the script when you aren't playing or else typing is going to be buggy.\n\nMake sure your crouch jump key is bound to +jump only!\n\nYou can now set a custom hotkey in config.ini that will let you pause the script while in-game. I recommend a function key (f1, f2, f3 etc.) or something you don't use while typing."
-messagebox.showwarning("crouchjump.exe", message)
+if first_launch:
+    # Display warning message box
+    message = "Don't forget to pause/close the script when you aren't playing or else typing is going to be buggy.\n\nMake sure your crouch jump key is bound to +jump only!\n\nYou can now set a custom hotkey in config.ini that will let you pause the script while in-game. I recommend a function key (f1, f2, f3 etc.) or something you don't use while typing."
+    messagebox.showwarning("crouchjump.exe", message)
+    config.set('Settings', 'first_launch', 'False')
+    with open(config_file, 'w') as configfile:
+        config.write(configfile)
 
 print(Fore.RED + "Crouch Jump activated. " + Fore.WHITE + Style.BRIGHT + "The script will automatically let go of crouch for you after a specified delay." + Style.RESET_ALL)
 print(Fore.WHITE + Style.BRIGHT + "You can change the uncrouch timing in the " + Fore.BLUE + Style.BRIGHT + "config.ini " + Fore.WHITE + Style.BRIGHT + "file. The default value is " + Fore.BLUE + Style.BRIGHT + "0.85" + Style.RESET_ALL + Fore.WHITE + Style.BRIGHT + " seconds." + Style.RESET_ALL)
