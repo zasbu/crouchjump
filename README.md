@@ -7,4 +7,6 @@ Now you can hold space without being crouched!
 
 Make sure your crouch jump key is only bound to +jump, this won't work if you have your crouch jump bind on!
 
+You can set a custom hotkey in config.ini that will work in-game now. I recommend setting a key that you don't use in typing, like a function key (f1, f2, f3 etc.).
+
 
